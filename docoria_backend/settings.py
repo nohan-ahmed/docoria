@@ -27,11 +27,13 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+AUTH_USER_MODEL = 'accounts.User' # This allows using your custom user model for authentication 
 
 # Application definition
 
 INSTALLED_APPS = [
     # local apps
+    'core',
     'accounts',
     'patients',
     'doctors',
