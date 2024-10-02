@@ -11,6 +11,11 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+import environ
+
+# Initialize environ
+env = environ.Env()
+environ.Env.read_env()  # Load environment variables from .env file
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -131,6 +136,43 @@ STATIC_URL = "static/"
 STATICFILES_DIRS = [
     BASE_DIR / "static"
 ]
+
+
+# AWS S3 Configuration
+AWS_ACCESS_KEY_ID = env('AWS_ACCESS_KEY_ID')  # Your AWS Access Key ID
+AWS_SECRET_ACCESS_KEY = env('AWS_SECRET_ACCESS_KEY')  # Your AWS Secret Access Key
+AWS_STORAGE_BUCKET_NAME = env('AWS_STORAGE_BUCKET_NAME')  # S3 Bucket Name
+AWS_S3_REGION_NAME = env('AWS_S3_REGION_NAME', default='us-east-1')  # S3 Region
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'  # Custom S3 domain for accessing files
+AWS_DEFAULT_ACL = None  # Prevents S3 from applying default permissions to uploaded files (important for security)
+AWS_S3_FILE_OVERWRITE = False  # Prevent overwriting existing files with the same name
+AWS_QUERYSTRING_AUTH = False  # Disables query parameter authentication (good for public files)
+AWS_S3_OBJECT_PARAMETERS = {
+    'CacheControl': 'max-age=86400',  # Cache files for 24 hours to improve performance
+    'ContentDisposition': 'attachment',  # Forces downloads instead of inline display (optional, adjust as needed)
+}
+
+# Static and media files configuration
+STORAGES = {
+    "default": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",  # Using S3 for media file storage
+        "OPTIONS": {
+            "location": "media",  # Store media files in 'media' folder
+        },
+    },
+    "staticfiles": {
+        "BACKEND": "storages.backends.s3boto3.S3Boto3Storage",  # Using S3 for static file storage
+        "OPTIONS": {
+            "location": "static",  # Store static files in 'static' folder
+        },
+    },
+}
+
+# Static and media URLs for serving files
+STATIC_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/static/'  # URL to serve static files
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/media/'  # URL to serve media files
+
+# AWS S3 Configuration end.
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
