@@ -11,7 +11,7 @@ from itertools import chain
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-
+from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 # Local modules
 from . import models
 from . import serializers
@@ -46,7 +46,6 @@ class RegisterAPIView(APIView):
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-
 class VerifyEmailAPIView(APIView):
     def get(self, request, uid, token, format=None):
         try:
@@ -63,3 +62,21 @@ class VerifyEmailAPIView(APIView):
             return Response(token, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid verification link.'}, status=status.HTTP_400_BAD_REQUEST)
+        
+class PasswordChangeAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, format=None):
+        serializer = serializers.PasswordChangeSerializer(data=request.data, context={'request':request})
+        if serializer.is_valid():
+            user = serializer.save()
+            
+            # send password change email
+            message = render_to_string('core/change_password_email.html', {
+                    'user':user,
+                    'time':{timezone.now().strftime('%Y-%m-%d %H:%M:%S')}
+                })
+
+            subject = "Your Password Has Been Changed"
+            send_mail(subject, strip_tags(message), settings.DEFAULT_FROM_EMAIL, [request.user.email])
+            return Response({'Message':'Passwrod changed successfully!'}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
