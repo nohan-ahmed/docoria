@@ -3,7 +3,7 @@ from rest_framework.exceptions import ValidationError
 from rest_framework import serializers
 from . import models
 
-
+# TODO: Add more fields
 class RegisterSerializer(serializers.ModelSerializer):
     confirm_password = serializers.CharField(style={'input_type':'password'}, write_only=True, required=True)
     
@@ -32,6 +32,7 @@ class RegisterSerializer(serializers.ModelSerializer):
         # We pop out this password field and store its value in the password variable because we set the password using the set_password method.
         password = validated_data.pop('password')
         user = models.User(**validated_data) # Create an user.
+        user.is_active = False # When a user creates a new account it will be disabled by default.
         user.set_password(password) # This method ensures that the password will be stored encrypted.
         user.save()
         return user

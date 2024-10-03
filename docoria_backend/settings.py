@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
 from pathlib import Path
+from datetime import timedelta
 import environ
 
 # Initialize environ
@@ -51,6 +52,8 @@ INSTALLED_APPS = [
     'departments',
     # third-party apps
     'rest_framework',
+    'rest_framework_simplejwt',
+
     # Default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -120,6 +123,22 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Django rest framework configuration.
+REST_FRAMEWORK = {
+    # JWT Configuration
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
+    )
+}
+
+# You can customize JWT settings like token expiration times.
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=5),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=1),
+    "ROTATE_REFRESH_TOKENS": False,
+    "BLACKLIST_AFTER_ROTATION": False,
+    "UPDATE_LAST_LOGIN": False,
+    }
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -189,3 +208,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
 
 }
+
+
+# Configuring Email in Django
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = env('EMAIL_USER')
+EMAIL_HOST_PASSWORD = env('EMAIL_PASSWORD')
