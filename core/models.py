@@ -8,7 +8,7 @@ class Country(models.Model):
     currency = models.CharField(max_length=10, blank=True, null=True)  # Optional: add fields like currency
     phone_code = models.CharField(max_length=10, blank=True, null=True)  # Optional: country phone code
     region = models.CharField(max_length=100, blank=True, null=True)  # Optional: world region (e.g., Europe)
-
+    created_at = models.DateTimeField(auto_now_add=True)
     class Meta:
         verbose_name = 'Country'
         verbose_name_plural = 'Countries'

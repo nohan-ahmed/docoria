@@ -13,8 +13,8 @@ from core.models import Country
 
 class User(AbstractUser):
     # Those are extra fields for custom user model
-    profile_image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)  # Todo:
-    cover_image = models.ImageField(upload_to=user_directory_path, null=True, blank=True)  # Todo:
+    profile_image = models.ImageField(upload_to=user_directory_path, null=True, blank=True) 
+    cover_image = models.ImageField(upload_to=user_directory_path, null=True, blank=True) 
     gender = models.CharField(choices=GENDER, max_length=50)
     date_of_birth = models.DateField(blank=True, null=True)
     email = models.EmailField(unique=True)
@@ -33,12 +33,12 @@ class User(AbstractUser):
 
 class Address(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name='address')
-    country = models.OneToOneField(to=Country, on_delete=models.CASCADE, blank=True, null=True)
-    street_address = models.CharField(max_length=255, blank=True, null=True)
-    city = models.CharField(max_length=100, blank=True, null=True)
-    state = models.CharField(max_length=100, blank=True, null=True)
-    zip_code = models.CharField(max_length=10, blank=True, null=True)
-    created_at = models.DateTimeField(auto_now_add=True, blank=True, null=True) # Todo: remove blank, null
+    country = models.OneToOneField(to=Country, on_delete=models.CASCADE)
+    street_address = models.CharField(max_length=255)
+    city = models.CharField(max_length=100)
+    state = models.CharField(max_length=100)
+    zip_code = models.CharField(max_length=10)
+    created_at = models.DateTimeField(auto_now_add=True)
     
     class Meta:
         verbose_name = 'Address'
