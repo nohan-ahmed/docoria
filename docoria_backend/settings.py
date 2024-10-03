@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'notifications',
     'departments',
     # third-party apps
+    'rest_framework',
     # Default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -182,3 +183,13 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Django REST_FRAMEWORK Configuration
+
+REST_FRAMEWORK = {
+    # Use Django's standard `django.contrib.auth` permissions,
+    # or allow read-only access for unauthenticated users.
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
+    ]
+}
