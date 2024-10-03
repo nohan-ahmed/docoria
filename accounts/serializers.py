@@ -9,7 +9,7 @@ class RegisterSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = models.User
-        fields = ('username', 'first_name','last_name', 'email', 'password')
+        fields = ('username', 'first_name','last_name', 'email', 'password', 'confirm_password')
         extra_kwargs = {'password': {'write_only': True}}
         
     def validate(self, attrs):
@@ -35,3 +35,4 @@ class RegisterSerializer(serializers.ModelSerializer):
         user.set_password(password) # This method ensures that the password will be stored encrypted.
         user.save()
         return user
+    
