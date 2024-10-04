@@ -4,6 +4,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('doctors', views.DoctorAPIView)
+router.register('specialization', views.SpecializationAPIView)
 
 urlpatterns = [
     path('', include(router.urls))
