@@ -25,3 +25,9 @@ class DoctorAPIView(ModelViewSet):
         This ensures that the author is set correctly and prevents users from tampering with the field
         """
         serializer.save(user=self.request.user)
+        
+
+class SpecializationAPIView(ModelViewSet):
+    queryset = models.Specialization.objects.all()
+    serializer_class = serializers.SpecializationSerializer
+    permission_classes = [IsAuthenticatedOrReadOnly]

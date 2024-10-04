@@ -7,3 +7,9 @@ class DoctorSerializer(serializers.ModelSerializer):
         fields = ('id', 'user', 'specialization', 'experience', 'created_at')
         read_only_fields = ['user']
         
+
+class SpecializationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Specialization
+        fields = ('id', 'name', 'slug')
+        
