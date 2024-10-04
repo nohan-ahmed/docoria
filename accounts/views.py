@@ -137,7 +137,7 @@ class UserAPIView(ModelViewSet):
 class AddressAPIView(ModelViewSet):
     queryset = models.Address.objects.all()
     serializer_class = serializers.AddressSerializer
-    permission_classes= [IsOwnerOrReadOnlyForAddress]
+    permission_classes= [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyForAddress]
     def perform_create(self, serializer):
         """
         perform_create Method: This method is a hook provided by Django REST Framework's ModelViewSet. 
