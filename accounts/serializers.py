@@ -98,8 +98,20 @@ class PasswordResetSerializer(serializers.Serializer):
         return attrs
     
     
-    
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ('id','profile_image', 'cover_image', 'username', 'first_name', 'last_name', 'email', 'gender')
+        
+
+class AddressSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.Address
+        fields = ('id', 'user', 'country', 'city', 'state', 'zip_code')
+        read_only_fields = ['user']
+        
+        
+    def save(self, **kwargs):
+        if models.Address.objects.filter(user=kwargs.get('user')).exists():
+            raise serializers.ValidationError("You already have an address")
+        return super().save(**kwargs)

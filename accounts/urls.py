@@ -8,6 +8,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('users', views.UserAPIView)
+router.register('address', views.AddressAPIView)
 
 urlpatterns = [
     path("register/", views.RegisterAPIView.as_view()),

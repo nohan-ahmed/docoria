@@ -17,7 +17,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from . import models
 from . import serializers
 from .utils import get_tokens_for_user
-from .permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnly, IsOwnerOrReadOnlyForAddress
 # Create your views here.
 
 
@@ -132,3 +132,20 @@ class UserAPIView(ModelViewSet):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [IsOwnerOrReadOnly]
+
+class AddressAPIView(ModelViewSet):
+    queryset = models.Address.objects.all()
+    serializer_class = serializers.AddressSerializer
+    permission_classes= [IsOwnerOrReadOnlyForAddress]
+    def perform_create(self, serializer):
+        """
+        perform_create Method: This method is a hook provided by Django REST Framework's ModelViewSet. 
+        It allows you to customize the creation of a model instance without completely overriding the create method.
+        """
+        
+        """
+        Setting the author: By calling serializer.save(author=self.request.user), you automatically set the author field to the currently authenticated user when a post is created.
+        This ensures that the author is set correctly and prevents users from tampering with the field
+        """
+        serializer.save(user=self.request.user)
+        # Thsi method returns None
