@@ -17,7 +17,8 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from . import models
 from . import serializers
 from .utils import get_tokens_for_user
-from .permissions import IsOwnerOrReadOnly, IsOwnerOrReadOnlyForAddress
+from .permissions import IsOwnerOrReadOnly
+from core.permissions import IsOwnerOrReadOnly as IsOwnerOrReadOnlyForAddress
 # Create your views here.
 
 
