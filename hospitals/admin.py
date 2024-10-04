@@ -15,7 +15,6 @@ class HospitalAdmin(admin.ModelAdmin):
         "opening_hours",
     )
     search_fields = ("id", "name", "contact_email", "contact_number")
-    prepopulated_fields = {"slug": ("name",)}
 
 
 @admin.register(models.Location)

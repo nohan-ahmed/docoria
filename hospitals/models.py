@@ -12,17 +12,16 @@ from core.models import Country
 class Hospital(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE , related_name='hospitals')
     name = models.CharField(max_length=100, unique=True)
-    slug =models.SlugField(max_length=110, unique=True)
     cover_img = models.ImageField(upload_to=user_directory_path, default='') # Todo: 
     profile_img = models.ImageField(upload_to=user_directory_path, default='') # Todo: 
     description = models.TextField(null=True, blank=True) # Store HTML content
     contact_email = models.EmailField(max_length=254)
     contact_number = models.CharField( max_length=17)
     opening_hours = models.CharField(max_length=300)
-    specialties = models.ForeignKey(to=Specialization, on_delete=models.CASCADE)
+    specialties = models.ManyToManyField(to=Specialization)
     doctors = models.ManyToManyField(to=Doctor, related_name='hospitals')
     staffs = models.ManyToManyField(to=Staff, related_name='hospitals')
-    created_at = models.DateTimeField( auto_now_add=False)
+    created_at = models.DateTimeField( auto_now_add=True)
     
     def __str__(self) -> str:
         return self.name
@@ -33,7 +32,7 @@ class Location(models.Model):
     street_address = models.CharField(max_length=250)
     city = models.CharField(max_length=250)
     zip_code = models.PositiveIntegerField()
-    created_at = models.DateTimeField(auto_now_add=False)
+    created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:
         return f'{self.country} - {self.street_address} - {self.zip_code}'
