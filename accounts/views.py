@@ -9,6 +9,7 @@ from django.utils.html import strip_tags
 from itertools import chain
 # Import form django rest framework
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
@@ -16,6 +17,7 @@ from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnl
 from . import models
 from . import serializers
 from .utils import get_tokens_for_user
+from .permissions import IsOwnerOrReadOnly
 # Create your views here.
 
 
@@ -80,3 +82,53 @@ class PasswordChangeAPIView(APIView):
             send_mail(subject, strip_tags(message), settings.DEFAULT_FROM_EMAIL, [request.user.email])
             return Response({'Message':'Passwrod changed successfully!'}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class PasswordResetRequestAPIView(APIView):
+    def post(self, request, format=None):
+        serializer = serializers.PasswordResetRequestSerializer(data=request.data)
+        if serializer.is_valid():
+            user = models.User.objects.get(email=serializer.validated_data['email'])
+
+            # Generate a password reset token
+            token = default_token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+
+            # Create password reset link 
+            password_reset_link  = f"{request.build_absolute_uri('/api-user/password-reset/')}{uid}/{token}/"
+
+            # Render the HTML template with context
+            message = render_to_string("core/password_reset_mail.html",{
+                    "user": user,
+                    "password_reset_link": password_reset_link,
+                },
+            )
+
+            # Send the email
+            subject = "Password Reset"
+            send_mail(subject, strip_tags(message), settings.DEFAULT_FROM_EMAIL, [user.email])
+            return Response({"message": "Password reset email has been sent."}, status=status.HTTP_200_OK)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class PasswordResetAPIView(APIView):
+    def post(self, request, uid, token, format=None):
+        try:
+            user_id = smart_str(urlsafe_base64_decode(uid))
+            user = models.User.objects.get(pk=user_id)
+        except Exception:
+            user = None
+            
+        # validate the user & token
+        if user is not None and default_token_generator.check_token(user, token):
+            serializer = serializers.PasswordResetSerializer(data=request.data, context={'request':request})
+            if serializer.is_valid():
+                user.set_password(serializer.validated_data['new_password'])
+                user.save()
+                return Response({"message": "Password has been reset successfully."}, status=status.HTTP_200_OK)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response({"error": "Invalid password reset link."}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserAPIView(ModelViewSet):
+    queryset = models.User.objects.all()
+    serializer_class = serializers.UserSerializer
+    permission_classes = [IsOwnerOrReadOnly]

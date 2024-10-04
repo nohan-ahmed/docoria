@@ -69,3 +69,37 @@ class PasswordChangeSerializer(serializers.Serializer):
         user.set_password(self.validated_data.get('new_password'))
         user.save()
         return user
+    
+class PasswordResetRequestSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    
+    def validate_email(self, value):
+        if not models.User.objects.filter(email=value).exists():
+            raise serializers.ValidationError("User with this email does not exist")
+        return value
+
+class PasswordResetSerializer(serializers.Serializer):
+    new_password = serializers.CharField(style={'input_type':'password'}, write_only=True)
+    confirm_password = serializers.CharField(style={'input_type':'password'}, write_only=True)
+    
+    def validate(self, attrs):
+        new_password = attrs.get('new_password')
+        confirm_password = attrs.get('confirm_password')
+        
+        # Check that the password and confirm_password match.
+        if new_password != confirm_password:
+            raise serializers.ValidationError("new_password and confirm password doesn't match!")
+        
+        try:
+            validate_password(password=new_password, user=None)
+        except ValidationError as e:
+            raise serializers.ValidationError({'password': list(e.messages)})
+        
+        return attrs
+    
+    
+    
+class UserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = models.User
+        fields = ('id','profile_image', 'cover_image', 'username', 'first_name', 'last_name', 'email', 'gender')
