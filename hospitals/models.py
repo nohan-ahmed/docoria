@@ -12,15 +12,15 @@ from core.models import Country
 class Hospital(models.Model):
     user = models.ForeignKey(to=User, on_delete=models.CASCADE , related_name='hospitals')
     name = models.CharField(max_length=100, unique=True)
-    cover_img = models.ImageField(upload_to=user_directory_path, default='') # Todo: 
-    profile_img = models.ImageField(upload_to=user_directory_path, default='') # Todo: 
+    cover_img = models.ImageField(upload_to=user_directory_path, null=True, blank=True) # TODO: 
+    profile_img = models.ImageField(upload_to=user_directory_path, null=True, blank=True) # TODO: 
     description = models.TextField(null=True, blank=True) # Store HTML content
     contact_email = models.EmailField(max_length=254)
     contact_number = models.CharField( max_length=17)
     opening_hours = models.CharField(max_length=300)
     specialties = models.ManyToManyField(to=Specialization)
-    doctors = models.ManyToManyField(to=Doctor, related_name='hospitals')
-    staffs = models.ManyToManyField(to=Staff, related_name='hospitals')
+    doctors = models.ManyToManyField(to=Doctor, blank=True)
+    staffs = models.ManyToManyField(to=Staff, related_name='hospitals', blank=True)
     created_at = models.DateTimeField( auto_now_add=True)
     
     def __str__(self) -> str:
@@ -28,7 +28,7 @@ class Hospital(models.Model):
     
 class Location(models.Model):
     hospital = models.ForeignKey(to=Hospital, on_delete=models.CASCADE , related_name='locations')
-    country = models.OneToOneField(to=Country, on_delete=models.CASCADE)
+    country = models.ForeignKey(to=Country, on_delete=models.CASCADE)
     street_address = models.CharField(max_length=250)
     city = models.CharField(max_length=250)
     zip_code = models.PositiveIntegerField()
