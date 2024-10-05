@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'appointments',
     'notifications',
     'departments',
+    'reviews',
     # third-party apps
     'rest_framework',
     'rest_framework_simplejwt',
