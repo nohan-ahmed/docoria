@@ -13,3 +13,11 @@ def create_patient(sender, instance, created, **kwargs):
         Patient.objects.create(user=instance)
 
 
+# =================================================
+# Notes:- for django signals
+# =================================================
+# pre_save and post_save: Triggered before or after a model instance is saved.
+# pre_delete and post_delete: Triggered before or after a model instance is deleted.
+# Yes, you need to ensure that your Django signal is properly registered in your apps.py file's ready()
+# -------------------------------------------------
+# sender হলো সেই model জার কনো instance কে save() করলে আমদের receiver function টা triggered হবে। অ্যান্ড instance হলো সে যাকে save() করা হয়েছে।
