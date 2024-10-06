@@ -2,7 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticatedOrReadOnly
-from core.permissions import IsOwnerOrReadOnly
+from .permissions import IsOwnerOrReadOnlyDepartment
 # Local modules
 from. import models
 from. import serializers
@@ -11,7 +11,7 @@ from. import serializers
 class DepartmentAPIView(ModelViewSet):
     queryset = models.Department.objects.all()
     serializer_class = serializers.DepartmentSerializer
-    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyDepartment]
     filter_backends = [DjangoFilterBackend, SearchFilter]
     filterset_fields = ('id', 'name', 'hospital', 'doctors', 'staffs', 'services', 'created_at')
 
