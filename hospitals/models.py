@@ -28,10 +28,10 @@ class Hospital(models.Model):
     
 class Location(models.Model):
     hospital = models.ForeignKey(to=Hospital, on_delete=models.CASCADE , related_name='locations')
-    country = models.ForeignKey(to=Country, on_delete=models.CASCADE)
-    street_address = models.CharField(max_length=250)
-    city = models.CharField(max_length=250)
-    zip_code = models.PositiveIntegerField()
+    country = models.ForeignKey(to=Country, on_delete=models.CASCADE, null=True, blank=True)
+    street_address = models.CharField(max_length=250, null=True, blank=True)
+    city = models.CharField(max_length=250, null=True, blank=True)
+    zip_code = models.PositiveIntegerField(null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     
     def __str__(self) -> str:
