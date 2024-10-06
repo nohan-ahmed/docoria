@@ -28,7 +28,7 @@ class Hospital(models.Model):
     
 class Location(models.Model):
     hospital = models.ForeignKey(to=Hospital, on_delete=models.CASCADE , related_name='locations')
-    country = models.ForeignKey(to=Country, on_delete=models.CASCADE, null=True, blank=True)
+    country = models.ForeignKey(to=Country, on_delete=models.CASCADE, null=True, blank=True) #TODO: REMOVE NULL, BLANK
     street_address = models.CharField(max_length=250, null=True, blank=True)
     city = models.CharField(max_length=250, null=True, blank=True)
     zip_code = models.PositiveIntegerField(null=True, blank=True)

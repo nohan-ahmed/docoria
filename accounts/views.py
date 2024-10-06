@@ -110,7 +110,6 @@ class PasswordResetRequestAPIView(APIView):
             return Response({"message": "Password reset email has been sent."}, status=status.HTTP_200_OK)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-
 class PasswordResetAPIView(APIView):
     def post(self, request, uid, token, format=None):
         try:
@@ -128,6 +127,8 @@ class PasswordResetAPIView(APIView):
                 return Response({"message": "Password has been reset successfully."}, status=status.HTTP_200_OK)
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"error": "Invalid password reset link."}, status=status.HTTP_400_BAD_REQUEST)
+
+
 
 class UserAPIView(ModelViewSet):
     queryset = models.User.objects.all()
