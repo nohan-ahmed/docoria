@@ -7,11 +7,14 @@ from django.conf import settings
 from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from itertools import chain
+
 # Import form django rest framework
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 # Local modules
@@ -168,11 +171,17 @@ class UserAPIView(ModelViewSet):
     queryset = models.User.objects.all()
     serializer_class = serializers.UserSerializer
     permission_classes = [IsOwnerOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields  = ('id','username', 'first_name', 'last_name', 'email', 'gender')
+    search_fields = ('id','username', 'first_name', 'last_name', 'email', 'gender')
 
 class AddressAPIView(ModelViewSet):
     queryset = models.Address.objects.all()
     serializer_class = serializers.AddressSerializer
     permission_classes= [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnlyForAddress]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ('id', 'user', 'country', 'city', 'state', 'zip_code')
+    search_fields = ('id', 'city', 'state', 'zip_code')
     def perform_create(self, serializer):
         """
         perform_create Method: This method is a hook provided by Django REST Framework's ModelViewSet. 

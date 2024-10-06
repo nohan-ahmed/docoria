@@ -8,7 +8,7 @@ class UserAdmin(BaseUserAdmin):
     form = CustomUserChangeForm  # Use your custom change form
     add_form = CustomUserCreationForm  # Use custom creation form for adding new users
 
-    list_display = ("id", "username", "email", "is_active", "is_staff", "is_superuser")
+    list_display = ("id", "username", "email", 'gender', "is_active", "is_staff", "is_superuser")
     list_filter = ("is_active", "is_staff", "is_superuser")
 
     # Define fieldsets for changing user info

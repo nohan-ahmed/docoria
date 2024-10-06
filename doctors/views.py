@@ -2,6 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework import status
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import SearchFilter
 from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly
 from core.permissions import IsOwnerOrReadOnly
 # Local modules
@@ -13,6 +15,9 @@ class DoctorAPIView(ModelViewSet):
     queryset = models.Doctor.objects.all()
     serializer_class = serializers.DoctorSerializer
     permission_classes = [IsAuthenticatedOrReadOnly, IsOwnerOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ('id', 'user', 'specialization', 'experience', 'created_at')
+    search_fields = ('id', 'experience', 'created_at')
     
     def perform_create(self, serializer):
         """
@@ -31,3 +36,6 @@ class SpecializationAPIView(ModelViewSet):
     queryset = models.Specialization.objects.all()
     serializer_class = serializers.SpecializationSerializer
     permission_classes = [IsAuthenticatedOrReadOnly]
+    filter_backends = [DjangoFilterBackend, SearchFilter]
+    filterset_fields = ('id', 'name', 'slug', 'created_at')
+    search_fields = ('id', 'name', 'slug', 'created_at')
