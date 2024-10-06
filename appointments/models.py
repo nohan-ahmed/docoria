@@ -11,7 +11,7 @@ class Appointment(models.Model):
     patient = models.ForeignKey(to=Patient, on_delete=models.CASCADE, related_name='appointments')
     hospital = models.ForeignKey(to=Hospital, on_delete=models.CASCADE, related_name='appointments')
     appointment_type = models.CharField(choices=APPOINTMENT_TYPE, max_length=50, default='offline')
-    symtom = models.CharField(max_length=300)
+    symptom = models.CharField(max_length=300)
     status = models.CharField(choices=STATUS, max_length=300, default='pending')
     created_at = models.DateTimeField(auto_now_add=True)
     

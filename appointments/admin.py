@@ -6,6 +6,6 @@ from . import models
 
 @admin.register(models.Appointment)
 class AppointmentAdmin(admin.ModelAdmin):
-    list_display = ("id", "patient", "doctor", "hospital", "status", "created_at")
+    list_display = ("id", "patient", "doctor", "hospital", "status", "appointment_type", "created_at")
     list_filter = ("hospital", "doctor", "patient", "status")
     search_fields = ("id", "patient", "doctor", "hospital", "status", "created_at")
