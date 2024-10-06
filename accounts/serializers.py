@@ -102,7 +102,9 @@ class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = models.User
         fields = ('id','profile_image', 'cover_image', 'username', 'first_name', 'last_name', 'email', 'gender')
-        
+
+class UserLogoutAPIView(serializers.Serializer):
+    refresh = serializers.CharField(required=True)
 
 class AddressSerializer(serializers.ModelSerializer):
     class Meta:

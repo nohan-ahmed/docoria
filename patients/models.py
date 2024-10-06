@@ -6,8 +6,8 @@ from .constraints import BLOOD_GROUP_CHOICES
 # Create your models here.
 class Patient(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, related_name="patient")
-    contact_number = models.CharField(max_length=17)
-    blood_type = models.CharField(choices=BLOOD_GROUP_CHOICES, max_length=3)
+    contact_number = models.CharField(max_length=17, null=True, blank=True)
+    blood_type = models.CharField(choices=BLOOD_GROUP_CHOICES, max_length=3, null=True, blank=True)
     insurance_provider = models.CharField(max_length=250, null=True, blank=True)
     insurance_number = models.CharField(max_length=50, null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True)

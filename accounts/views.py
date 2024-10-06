@@ -8,6 +8,7 @@ from django.core.mail import send_mail
 from django.utils.html import strip_tags
 from itertools import chain
 # Import form django rest framework
+from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
@@ -48,7 +49,7 @@ class RegisterAPIView(APIView):
             return Response({'message':"Registration successfully please confirm your email"}, status=status.HTTP_201_CREATED)
         
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
+
 class VerifyEmailAPIView(APIView):
     def get(self, request, uid, token, format=None):
         try:
@@ -65,7 +66,7 @@ class VerifyEmailAPIView(APIView):
             return Response(token, status=status.HTTP_200_OK)
         else:
             return Response({'error': 'Invalid verification link.'}, status=status.HTTP_400_BAD_REQUEST)
-        
+
 class PasswordChangeAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, format=None):
@@ -117,7 +118,7 @@ class PasswordResetAPIView(APIView):
             user = models.User.objects.get(pk=user_id)
         except Exception:
             user = None
-            
+
         # validate the user & token
         if user is not None and default_token_generator.check_token(user, token):
             serializer = serializers.PasswordResetSerializer(data=request.data, context={'request':request})
@@ -128,6 +129,39 @@ class PasswordResetAPIView(APIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         return Response({"error": "Invalid password reset link."}, status=status.HTTP_400_BAD_REQUEST)
 
+
+class UserLogoutAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+    def post(self, request, format=None):
+        serializer = serializers.UserLogoutAPIView(data=request.data)
+
+        # Validate the serializer data.
+        if serializer.is_valid(raise_exception=True):
+            # If validation is successful, extract the 'refresh' token from the validated data.
+            try:
+                refresh_token = serializer.validated_data["refresh"]
+
+                # Create a RefreshToken instance from the provided token.
+                token = RefreshToken(refresh_token)
+
+                # Blacklist the refresh token, effectively logging out the user.
+                token.blacklist()
+
+                # Return a success response with HTTP 205 status code indicating that the client should reset the view.
+                return Response(
+                    {"message": "User logout successfully."},
+                    status=status.HTTP_205_RESET_CONTENT,
+                )
+
+            except Exception as e:
+                # If there is an error (e.g., an invalid token), return a 400 Bad Request response.
+                return Response(
+                    {"error": "Invalid refresh token"},
+                    status=status.HTTP_400_BAD_REQUEST,
+                )
+
+        # If serializer data is not valid, return the errors with a 400 Bad Request response.
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 class UserAPIView(ModelViewSet):
