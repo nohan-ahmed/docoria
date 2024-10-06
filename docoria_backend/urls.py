@@ -28,6 +28,7 @@ urlpatterns = [
     path('api-review/', include('reviews.urls')),
     path('api-service/', include('services.urls')),
     path('api-appointment/', include('appointments.urls')),
+    path('api-department/', include('departments.urls')),
     path('api-auth/', include('rest_framework.urls'))
 
 ]
