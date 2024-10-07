@@ -129,7 +129,9 @@ REST_FRAMEWORK = {
     # JWT Configuration
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
-    )
+    ),
+    # apply the style globally, using the DEFAULT_PAGINATION_CLASS settings
+    'DEFAULT_PAGINATION_CLASS': 'core.pagination.StandardResultsSetPagination',
 }
 
 # You can customize JWT settings like token expiration times.
