@@ -7,5 +7,7 @@ router.register('doctors', views.DoctorAPIView)
 router.register('specialization', views.SpecializationAPIView)
 
 urlpatterns = [
+    path('all-jobs/request/', views.ShowAllJobReauestAPIView.as_view()),
+    path('respond-job/request/<int:id>/', views.RespondToJobRequestAPIView.as_view()),
     path('', include(router.urls))
 ]

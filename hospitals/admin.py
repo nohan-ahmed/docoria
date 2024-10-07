@@ -23,3 +23,7 @@ class LocationAdmin(admin.ModelAdmin):
     list_filter = ("country", "city", "zip_code")
     search_fields = ("id", "hospital", "country", "street_address", "city", "zip_code")
 
+@admin.register(models.AddDoctorRequest)
+class AddDoctorRequestAdmin(admin.ModelAdmin):
+    list_display = ("id", "to_doctor", "status", "created_at")
+    

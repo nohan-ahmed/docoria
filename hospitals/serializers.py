@@ -17,4 +17,16 @@ class LocationSerializer(serializers.ModelSerializer):
         model = models.Location
         fields = ('id', 'hospital', 'country', 'street_address', 'city', 'zip_code', 'created_at')
         read_only_fields = ['hospital']
+
+
+class AddDoctorRequestSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = models.AddDoctorRequest
+        fields = ['id', 'from_hospital', "to_doctor", 'status', 'created_at']
+        read_only_fields = ['from_hospital', 'created_at']
         
+    def validate_to_doctor(self, value):
+        if models.AddDoctorRequest.objects.filter(to_doctor=value).exists():
+            raise serializers.ValidationError("You have already sent a request to this doctor.")
+        return value

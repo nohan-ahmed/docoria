@@ -38,3 +38,15 @@ class Location(models.Model):
         return f'{self.country} - {self.street_address} - {self.zip_code}'
 
 
+class AddDoctorRequest(models.Model):
+    from_hospital = models.ForeignKey(Hospital, related_name='sent_add_doctor_requests', on_delete=models.CASCADE)
+    to_doctor = models.ForeignKey(Doctor, related_name='received_job_requests', on_delete=models.CASCADE)
+    status = models.CharField(max_length=10, choices=(('pending', 'Pending'), ('accepted', 'Accepted'), ('rejected', 'Rejected')), default='pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('from_hospital', 'to_doctor')
+
+    def __str__(self):
+        return f'{self.from_hospital} -> {self.to_doctor} ({self.status})'
+
