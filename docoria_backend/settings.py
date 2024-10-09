@@ -55,6 +55,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
+    'channels',
+    'daphne',
     # Default apps
     'django.contrib.admin',
     'django.contrib.auth',
@@ -92,7 +94,9 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'docoria_backend.wsgi.application'
+# WSGI_APPLICATION = 'docoria_backend.wsgi.application'
+# Define ASGI application
+ASGI_APPLICATION = 'docoria_backend.asgi.application'
 
 
 # Database
@@ -105,6 +109,16 @@ DATABASES = {
     }
 }
 
+
+# Redis Channel Layer Configuration
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators

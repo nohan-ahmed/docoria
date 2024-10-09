@@ -29,6 +29,7 @@ urlpatterns = [
     path('api-service/', include('services.urls')),
     path('api-appointment/', include('appointments.urls')),
     path('api-department/', include('departments.urls')),
+    path('api-notification/', include('notifications.urls')),
     path('api-auth/', include('rest_framework.urls'))
 
 ]
