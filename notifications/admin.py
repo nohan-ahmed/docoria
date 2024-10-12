@@ -3,7 +3,7 @@ from .models import AppointmentNotification
 from django.utils import timezone
 
 class AppointmentNotificationAdmin(admin.ModelAdmin):
-    list_display = ('appointment', 'get_doctor', 'get_patient', 'get_hospital', 'notification_type', 'is_read', 'created_at')
+    list_display = ('id','appointment', 'get_doctor', 'get_patient', 'get_hospital', 'notification_type', 'is_read', 'created_at')
     list_filter = ('is_read', 'notification_type', 'created_at')
     search_fields = ('appointment__patient__name', 'appointment__doctor__name', 'appointment__hospital__name', 'message')
     readonly_fields = ('created_at', 'read_at')
@@ -16,12 +16,12 @@ class AppointmentNotificationAdmin(admin.ModelAdmin):
 
     def get_doctor(self, obj):
         """Display the doctor associated with the appointment."""
-        return obj.appointment.doctor.name
+        return f'{obj.appointment.doctor.user.first_name} {obj.appointment.doctor.user.last_name}'
     get_doctor.short_description = 'Doctor'
 
     def get_patient(self, obj):
         """Display the patient associated with the appointment."""
-        return obj.appointment.patient.name
+        return f'{obj.appointment.doctor.user.username}'
     get_patient.short_description = 'Patient'
 
     def get_hospital(self, obj):
